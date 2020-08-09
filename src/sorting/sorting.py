@@ -1,4 +1,12 @@
 # TO-DO: complete the helper function below to merge 2 sorted arrays
+
+# constructs randomized array of length 'size', each element is randomly selected from the range 0 up to 'max'
+def create_array(size=10, max=50):
+    from random import randint
+    return [randint(0, max) for _ in range(size)]
+
+# print(create_array())
+
 # Since we "divide" and then "conquer", we can think about the total runtime of merge sort as O(Log(N)) * O(N) or 
 # O(N * Log(N))
 
@@ -10,45 +18,37 @@
 # we then merge each half that was split, sorting them in the process
 # arrA: left array
 # arrB: right array
+# recombination/dividing step: O Log(N) step
 def merge(arrA, arrB):
-    elements = len(arrA) + len(arrB)
-    # merged_arr = [0] * elements
-    
-    result = [] # result/sorted array
-    arrA_pointer = arrB_pointer = 0 # initialize both array indexes into zero
-    
-    # we use the array lengths often, so it's handy to make variables
-    arrA_length, arrB_length = len(arrA), len(arrB)
-    
-    for _ in range(elements):
-        if arrA_pointer < arrA_length and arrB_pointer < arrB_length:
-            # we check which value from the start of each array is smaller
-            # if the item at the beginning of the left array is smaller, 
-            if arrA[arrA_pointer] <= arrB[arrB_pointer]:
-                # add it to the sorted array/result
-                result.append(arrA[arrA_pointer])
-                # increment left pointer plus equals one
-                arrA_pointer += 1
-                
-            # else if the above is not the case, then there's one another conclusion. 
+    # elements = len(arrA) + len(arrB)
+    # merged_arr = [0] * elements 
+    result = []  # sorted array - final output array
+    arrA_idx, arrB_idx = 0, 0 # initialize both array indeces into zero because the smalles ends of both arrays will be at the beginning since they are both in sorted order
+    # we continue iterating until we've used up all the elements in one of the input arrays
+    while arrA_idx < len(arrA) and arrB_idx < len(arrB): # base case
+            # on each iteration, we compare the elements seen at the top of the array &
+            if arrA[arrA_idx] < arrB[arrB_idx]:
+                # append whichever is smaller onto a merged array/result
+                result.append(arrA[arrA_idx])
+                # increment the index for the array we pulled from to prevent writing the same element onto the merged array again
+                arrA_idx += 1
             else: # if the item at the beginning of the right list is smaller,
                 # add it to the sorted array/result
-                result.append(arrB[arrB_pointer])
-                # increment the right pointer
-                arrB_pointer += 1
-        
-        # If the above is not the case, and the for loop does not trigger, we know that there is an element either on the left or right array.
-        # If we've reached the end of the left array, add the elements from the right array
-        elif arrA_pointer == arrA_length:
-            result.append(arrB[arrB_pointer])
-            arrB_pointer += 1
-            
-        # If we've reached the end of the right array, add the elements from the left array
-        elif arrB_pointer == arrB_length:
-            result.append(arrA[arrA_pointer])
-            arrA_pointer += 1
+                result.append(arrB[arrB_idx])
+                # increment the index for the array we pulled from to prevent writing the same element onto the merged array again
+                arrB_idx += 1
+    # at the end of the while loop, we extend the merged array with wichever of the two input arrays wasn't completely used up inside the while loop. 
+    # i.e. if after the while loop, if a index variable is equal to the input arrA, we already know that we pushed all of the elements into the result array. If this is the case, then it must be true that there's at least one element in arrB. So, we push at least one element to the end of the result array. 
+    if arrA_idx == len(arrA): result.extend(arrB[arrB_idx:])
+    else:                     result.extend(arrA[arrA_idx:])
+    
+    # at the end of the function return the newly merged result array/
+    return result 
 
-    return result
+# test case
+# a=[1,3, 5]
+# b=[2,4,6]
+# print(merge(a, b))
 
 # TO-DO: implement the Merge Sort function below recursively
 # divide and conquer algo == recursion
@@ -56,12 +56,14 @@ def merge(arrA, arrB):
 # to move towards the base case, you must repeatedly divide the original collection in half until we reach the base case
 # arrays with a single element is the base case because they are already sorted
 # then "merge" these sorted pieces back together
+# merging step: O(N) step
 def merge_sort(arr):
     # if the length of the array is a single element, return it
-    if len(arr) <= 1:
-        return arr
+    # because an array of zero or one element is already sorted, by definition
+    if len(arr) <= 1: return arr
+    # split the list in half and call merge sort recursively on each half
     
-    # use floor division to get midpoint, indices must be integers
+    # use floor division to get the midpoint, indices must be integers
     midpoint = int(len(arr) // 2)
     
     # sort and merge each half
@@ -72,12 +74,14 @@ def merge_sort(arr):
     # merge the sorted arrays (left & right) into a new one
     return merge(arrA, arrB)
     
-# verify it works
-random_array_of_nums = [120, 45, 68, 250, 176]
-print(random_array_of_nums)
 
-random_array_of_nums = merge_sort(random_array_of_nums)
-print(random_array_of_nums)
+# verify it works
+a = create_array()
+print(a)
+
+s=merge_sort(a)
+print(s)
+
 
 
 # STRETCH: implement the recursive logic for merge sort in a way that doesn't 
