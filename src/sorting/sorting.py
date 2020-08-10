@@ -19,45 +19,42 @@ def create_array(size=8, max=50):
 # arrB: right array
 # recombination/dividing step: O Log(N) step
 """Consider an array with 8 elements, when you split the problem, it becomes 2 arrays of 4 elements, then split it again and it becomes 4 arrays of 2 elements. When it finally becomes 8 arrays of 1 element, that's when you join it together but you work your way up combining the 8 arrays of 1 element to 4 arrays of 2 elements, and so forth"""
-
-# iterative 
+# iterative function
 def merge(arrA, arrB):
-    elements = len(arrA) + len(arrB)
-    merged_arr = [0] * elements # [0,0,0,0,0,0,0,0]
-    # result = []
-    arrA_pointer = arrB_pointer = 0  # initialize both array indexes into zero
-    # we use the array lengths often, so it's handy to make variables
+    elements = len(arrA) + len(arrB) # 4 + 4
+    merged_arr = [0] * elements # [0,0,0,0,0,0,0,0] placeholder for the final merged sorted arrays(2)
+    
+    arrA_pointer = arrB_pointer = 0  # initialize both array indeces/pointers into zero because the smallest ends of both arrays will be at the beginning since they are both in sorted order
+    
+    # we use the array lengths often, so it's handy to make variable
     arrA_length, arrB_length = len(arrA), len(arrB)
 
-    for _ in range(elements):
-        if arrA_pointer < arrA_length and arrB_pointer < arrB_length:
+    # we continue iterating until we've used up all the elements in one of the input arrays
+    for _ in range(elements): # 8 elements of at value of 0 array
+        if arrA_pointer < arrA_length and arrB_pointer < arrB_length: # base case
             # we check which value from the start of each array is smaller
-            # if the item at the beginning of the left array is smaller,
+            # if the item at the beginning of the left array is smaller or equal,
             if arrA[arrA_pointer] <= arrB[arrB_pointer]:
-                # add it to the sorted array/result
-                #result.append(arrA[arrA_pointer])
+                # then add it to the merged array
                 merged_arr[arrA_pointer + arrB_pointer] = arrA[arrA_pointer]
-                # increment left pointer plus equals one
+                # increment the index for the left array we pulled from to prevent writing the same element onto the merged array again
                 arrA_pointer += 1
 
-            # else if the above is not the case, then there's one another conclusion.
-            else:  # if the item at the beginning of the right list is smaller,
-                # add it to the sorted array/result
-                # result.append(arrB[arrB_pointer])
+            # else if the above is not the case, then there's only another conclusion.
+            else:  # if the item at the beginning of the right array is smaller,
+                # then add it to the merged array
                 merged_arr[arrA_pointer + arrB_pointer] = arrB[arrB_pointer]
-                # increment the right pointer
+                # increment the index for the right array we pulled from to prevent writing the same element onto the merged array again
                 arrB_pointer += 1
 
         # If the above is not the case, and the for loop does not trigger, we know that there is an element either on the left or right array.
-        # If we've reached the end of the left array, add the elements from the right array
+        # If we've reached the end of the left array, add the elements from the right array to the merged array
         elif arrA_pointer == arrA_length:
-            # result.append(arrB[arrB_pointer])
             merged_arr[arrA_pointer + arrB_pointer] = arrB[arrB_pointer] # right array
             arrB_pointer += 1
 
-        # If we've reached the end of the right array, add the elements from the left array
+        # If we've reached the end of the right array, add the elements from the left array to the merged array
         elif arrB_pointer == arrB_length:
-            # result.append(arrA[arrA_pointer])
             merged_arr[arrA_pointer + arrB_pointer] = arrA[arrA_pointer] # left array
             arrA_pointer += 1
 
@@ -80,15 +77,15 @@ def merge_sort(arr):
     # if the length of the array is a single element, return it
     # because an array of zero or one element is already sorted, by definition
     if len(arr) <= 1: return arr
-    # split the list in half and call merge sort recursively on each half
+    # split the array in half and call merge sort recursively on each half
     
     # use floor division to get the midpoint, indices must be integers
     midpoint = int(len(arr) // 2)
     
     # sort and merge each half
     # recursive calls 
-    arrA = merge_sort(arr[:midpoint]) # left half will be up to the midpoint
-    arrB = merge_sort(arr[midpoint:]) # right half will be from midpoint to the end
+    arrA = merge_sort(arr[:midpoint]) # left half of the array will be up to the midpoint
+    arrB = merge_sort(arr[midpoint:]) # right half of the array will be from midpoint to the end
     
     # merge the sorted arrays (left & right) into a new one
     return merge(arrA, arrB)
