@@ -13,8 +13,6 @@ def create_array(size=8, max=50):
 # Adjacent elements become sorted pairs, then sorted pairs are merged and sorted with other pairs as well
 # this process continues until we get a sorted list with all the elements of the unsorted input list
 
-# recursively split the array in half until we have arrays with size one
-# we then merge each half that was split, sorting them in the process
 # arrA: left array
 # arrB: right array
 # recombination/dividing step: O Log(N) step
@@ -62,8 +60,8 @@ def merge(arrA, arrB):
     return merged_arr
 
 # test case
-# a=[1,3, 5]
-# b=[2,4,6]
+a=[1, 3, 5]
+b=[2, 4, 6]
 # print(merge(a, b))
 
 # TO-DO: implement the Merge Sort function below recursively
@@ -77,8 +75,8 @@ def merge_sort(arr):
     # if the length of the array is a single element, return it
     # because an array of zero or one element is already sorted, by definition
     if len(arr) <= 1: return arr
-    # split the array in half and call merge sort recursively on each half
     
+    # split the array in half and call merge sort recursively on each half
     # use floor division to get the midpoint, indices must be integers
     midpoint = int(len(arr) // 2)
     
@@ -93,8 +91,11 @@ def merge_sort(arr):
 
 # verify it works
 a = create_array()
+b = create_array()
 print(a)
-s=merge_sort(a)
+print(b)
+
+s = merge_sort(a + b) 
 print(s)
 
 
